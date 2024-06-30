@@ -28,10 +28,10 @@ public class HitController {
 
     @GetMapping("/stats")
     @ResponseStatus(HttpStatus.OK)
-    public List<StatsDTO> getStats(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-                                   @RequestParam List<String> uris,
-                                   @RequestParam boolean unique) {
+    public List<StatsDTO> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+                                   @RequestParam(required = false) List<String> uris,
+                                   @RequestParam(required = false) boolean unique) {
         log.info("Получен запрос GET, на получение статистики по посещениям");
         List<StatsDTO> statsDTOList = service.getStats(start, end, uris, unique);
         log.info("Получен ответ, список размера: {}", statsDTOList.size());

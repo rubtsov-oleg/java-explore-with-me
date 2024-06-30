@@ -7,6 +7,7 @@ import ru.practicum.explorewithme.dto.HitDTO;
 import ru.practicum.explorewithme.dto.StatsDTO;
 import ru.practicum.explorewithme.hit.mapper.HitMapper;
 import ru.practicum.explorewithme.hit.mapper.StatsMapper;
+import ru.practicum.explorewithme.hit.model.Stats;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,9 +28,20 @@ public class HitServiceImpl implements HitService {
 
     @Override
     public List<StatsDTO> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        if (unique) {
-            return statsMapper.toListDTO(hitRepository.findUniqueHitsStatistics(start, end, uris));
+        List<Stats> statsList;
+        if (uris == null || uris.isEmpty()) {
+            if (unique) {
+                statsList = hitRepository.findUniqueHitsStatisticsWithoutUris(start, end);
+            } else {
+                statsList = hitRepository.findHitsStatisticsWithoutUris(start, end);
+            }
+        } else {
+            if (unique) {
+                statsList = hitRepository.findUniqueHitsStatisticsWithUris(start, end, uris);
+            } else {
+                statsList = hitRepository.findHitsStatisticsWithUris(start, end, uris);
+            }
         }
-        return statsMapper.toListDTO(hitRepository.findHitsStatistics(start, end, uris));
+        return statsMapper.toListDTO(statsList);
     }
 }
