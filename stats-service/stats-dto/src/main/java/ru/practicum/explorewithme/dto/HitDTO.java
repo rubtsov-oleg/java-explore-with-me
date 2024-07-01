@@ -17,13 +17,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class HitDTO {
     private Integer id;
     @NotNull(message = "app can`t null!")
-    @Size(min = 1, max = 200, message = "Max size 200!")
+    @Size(min = 1, max = 30, message = "Max size 30!")
     private String app;
     @NotNull(message = "uri can`t null!")
-    @Size(min = 1, max = 200, message = "Max size 200!")
+    @Size(min = 1, max = 2000, message = "Max size 2000!")
     private String uri;
     @NotNull(message = "ip can`t null!")
-    @Size(min = 1, max = 200, message = "Max size 200!")
+    @Size(min = 1, max = 15, message = "Max size 15!")
     private String ip;
     @NotNull(message = "timestamp can`t null!")
     @PastOrPresent(message = "timestamp can`t be in feature!")
