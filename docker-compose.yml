@@ -21,6 +21,8 @@ services:
       - POSTGRES_DB=stats
       - POSTGRES_USER=app
       - POSTGRES_PASSWORD=123qwe
+    ports:
+      - "5432:5432"
 
   ewm-service:
     build:
@@ -46,6 +48,8 @@ services:
     expose:
       - "5438"
     command: -p 5438
+    ports:
+      - "5438:5438"
 
 volumes:
   ewm_pgdata:
