@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.event;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
@@ -66,8 +68,10 @@ public class EventServiceImpl implements EventService {
     public List<EventShortDTO> getAllEvents(String text, List<Integer> categories, Boolean paid, String rangeStart,
                                             String rangeEnd, Boolean onlyAvailable, String sort, Integer from,
                                             Integer size, HttpServletRequest request) {
-        if (categories.stream().anyMatch((category -> category <= 0))) {
-            throw new ValidationException("Переданы некорректные категории");
+        if (categories != null) {
+            if (categories.stream().anyMatch((category -> category <= 0))) {
+                throw new ValidationException("Переданы некорректные категории");
+            }
         }
         Pageable pageable = PageRequest.of(from / size, size);
         List<Event> eventList = eventRepository.getAllEvents(
