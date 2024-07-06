@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.category.CategoryRepository;
 import ru.practicum.explorewithme.client.StatsClient;
+import ru.practicum.explorewithme.comment.CommentMapper;
+import ru.practicum.explorewithme.comment.CommentRepository;
 import ru.practicum.explorewithme.dto.HitDTO;
 import ru.practicum.explorewithme.event.dto.*;
 import ru.practicum.explorewithme.event.model.Event;
@@ -37,6 +39,8 @@ public class EventServiceImpl implements EventService {
     private final EventMapper eventMapper;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
+    private final CommentMapper commentMapper;
+    private final CommentRepository commentRepository;
     @Value("${stats-server.url}")
     private String statsServerUrl;
     private StatsClient statsClient;
@@ -58,7 +62,8 @@ public class EventServiceImpl implements EventService {
         event.setInitiator(user);
         event.setState(EventState.PENDING);
         event.setCreatedOn(LocalDateTime.now());
-        return eventMapper.toOutDTO(eventRepository.save(event), statsClient, requestRepository);
+        return eventMapper.toOutDTO(
+                eventRepository.save(event), statsClient, requestRepository, commentRepository, commentMapper);
     }
 
     @Override
@@ -66,7 +71,7 @@ public class EventServiceImpl implements EventService {
         saveStats(request);
         EventOutDTO eventOutDTO = eventMapper.toOutDTO(eventRepository.findById(eventId)
                         .orElseThrow(() -> new NoSuchElementException("Событие " + eventId + " не найдено")),
-                statsClient, requestRepository);
+                statsClient, requestRepository, commentRepository, commentMapper);
         if (!eventOutDTO.getState().equals(EventState.PUBLISHED)) {
             throw new NoSuchElementException("Событие " + eventId + " не найдено");
         }
@@ -100,7 +105,7 @@ public class EventServiceImpl implements EventService {
                 eventRepository.findAllEvents(
                                 states, users, categories, rangeStart,
                                 rangeEnd, PageRequest.of(from / size, size))
-                        .getContent(), statsClient, requestRepository
+                        .getContent(), statsClient, requestRepository, commentRepository, commentMapper
         );
     }
 
@@ -159,7 +164,8 @@ public class EventServiceImpl implements EventService {
         if (eventAdminUpdateDTO.getTitle() != null) {
             event.setTitle(eventAdminUpdateDTO.getTitle());
         }
-        return eventMapper.toOutDTO(eventRepository.save(event), statsClient, requestRepository);
+        return eventMapper.toOutDTO(
+                eventRepository.save(event), statsClient, requestRepository, commentRepository, commentMapper);
     }
 
     @Override
@@ -175,7 +181,7 @@ public class EventServiceImpl implements EventService {
     public EventOutDTO getEventById(Integer eventId, Integer userId) {
         EventOutDTO eventOutDTO = eventMapper.toOutDTO(eventRepository.findById(eventId)
                         .orElseThrow(() -> new NoSuchElementException("Событие " + eventId + " не найдено")),
-                statsClient, requestRepository);
+                statsClient, requestRepository, commentRepository, commentMapper);
         if (!eventOutDTO.getInitiator().getId().equals(userId)) {
             throw new NoSuchElementException("Событие " + eventId + " не найдено");
         }
@@ -235,7 +241,8 @@ public class EventServiceImpl implements EventService {
         if (eventUserUpdateDTO.getTitle() != null) {
             event.setTitle(eventUserUpdateDTO.getTitle());
         }
-        return eventMapper.toOutDTO(eventRepository.save(event), statsClient, requestRepository);
+        return eventMapper.toOutDTO(
+                eventRepository.save(event), statsClient, requestRepository, commentRepository, commentMapper);
     }
 
     private Comparator<EventShortDTO> getComparator(String sort) {
