@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import ru.practicum.explorewithme.request.RequestRepository;
 import ru.practicum.explorewithme.user.User;
 import ru.practicum.explorewithme.user.UserRepository;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -35,7 +37,14 @@ public class EventServiceImpl implements EventService {
     private final EventMapper eventMapper;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
-    private final StatsClient statsClient = new StatsClient("http://stats-server:9090");
+    @Value("${stats-server.url}")
+    private String statsServerUrl;
+    private StatsClient statsClient;
+
+    @PostConstruct
+    public void init() {
+        this.statsClient = new StatsClient(statsServerUrl);
+    }
 
     @Override
     @Transactional

@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.compilation;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import ru.practicum.explorewithme.event.EventMapper;
 import ru.practicum.explorewithme.event.EventRepository;
 import ru.practicum.explorewithme.request.RequestRepository;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,7 +23,14 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventMapper eventMapper;
     private final EventRepository eventRepository;
     private final RequestRepository requestRepository;
-    private final StatsClient statsClient = new StatsClient("http://stats-server:9090");
+    @Value("${stats-server.url}")
+    private String statsServerUrl;
+    private StatsClient statsClient;
+
+    @PostConstruct
+    public void init() {
+        this.statsClient = new StatsClient(statsServerUrl);
+    }
 
     @Override
     @Transactional

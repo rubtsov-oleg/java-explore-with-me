@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
@@ -14,7 +13,6 @@ import javax.validation.constraints.Size;
 public class CategoryDTO {
     private Integer id;
 
-    @NotNull(message = "name can`t be null!")
     @NotBlank(message = "name can`t be blank!")
     @Size(min = 1, max = 50, message = "Max size 50!")
     private String name;

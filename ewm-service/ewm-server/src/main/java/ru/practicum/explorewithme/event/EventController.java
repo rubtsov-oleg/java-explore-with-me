@@ -44,7 +44,7 @@ public class EventController {
             @RequestParam(required = false) String rangeStart,
             @RequestParam(required = false) String rangeEnd,
             @RequestParam(defaultValue = "false") Boolean onlyAvailable,
-            @RequestParam(required = false, defaultValue = "EVENT_DATE") String sort,
+            @RequestParam(defaultValue = "EVENT_DATE") String sort,
             @RequestParam(defaultValue = "0") @Min(value = 0) Integer from,
             @RequestParam(defaultValue = "10") @Positive Integer size,
             HttpServletRequest request) {

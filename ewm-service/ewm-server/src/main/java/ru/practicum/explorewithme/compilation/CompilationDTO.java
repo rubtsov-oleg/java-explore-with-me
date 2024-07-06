@@ -7,7 +7,6 @@ import lombok.Data;
 import ru.practicum.explorewithme.anotation.MarkerOfCreate;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -17,7 +16,6 @@ public class CompilationDTO {
     private List<Integer> events;
     private Boolean pinned;
 
-    @NotNull(groups = MarkerOfCreate.class, message = "Title can`t be null!")
     @NotBlank(groups = MarkerOfCreate.class, message = "Title can`t be blank!")
     @Size(min = 1, max = 50, message = "Min size 1, Max size 50!")
     private String title;

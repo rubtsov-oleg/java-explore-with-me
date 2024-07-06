@@ -18,7 +18,6 @@ public class UserDTO {
     @NotBlank(groups = MarkerOfCreate.class, message = "name not null.")
     @Size(min = 2, max = 250, message = "Min size 6, Max size 254!")
     private String name;
-    @NotNull(groups = MarkerOfCreate.class, message = "email can`t null!")
     @NotBlank(groups = MarkerOfCreate.class, message = "email not null.")
     @Email(groups = MarkerOfCreate.class, message = "Incorrect Email.")
     @Size(min = 6, max = 254, message = "Min size 6, Max size 254!")

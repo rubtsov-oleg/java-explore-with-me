@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class EventDTO {
     private Integer id;
 
-    @NotNull(message = "Annotation can`t be null!")
     @NotBlank(message = "Annotation can`t be blank!")
     @Size(min = 20, max = 2000, message = "Min size 20, Max size 2000!")
     private String annotation;
@@ -22,7 +21,6 @@ public class EventDTO {
     @NotNull(message = "Category can`t be null!")
     private Integer category;
 
-    @NotNull(message = "Description can`t be null!")
     @NotBlank(message = "Description can`t be blank!")
     @Size(min = 20, max = 7000, message = "Min size 20, Max size 7000!")
     private String description;
@@ -41,7 +39,6 @@ public class EventDTO {
 
     private Boolean requestModeration;
 
-    @NotNull(message = "Title can`t be null!")
     @NotBlank(message = "Title can`t be blank!")
     @Size(min = 3, max = 120, message = "Min size 3, Max size 120!")
     private String title;
