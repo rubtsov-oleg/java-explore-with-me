@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.hit.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,4 +29,15 @@ public class Hit {
 
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        return id != null && id.equals(((Hit) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

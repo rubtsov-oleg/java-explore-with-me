@@ -21,6 +21,8 @@ services:
       - POSTGRES_DB=stats
       - POSTGRES_USER=app
       - POSTGRES_PASSWORD=123qwe
+    ports:
+      - "5432:5432"
 
   ewm-service:
     build:
@@ -31,6 +33,7 @@ services:
     depends_on:
       - ewm-db
     environment:
+      - STATS_SERVER_URL=http://stats-server:9090
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5438/ewm
       - POSTGRES_USER=app
       - POSTGRES_PASSWORD=123qwe
@@ -46,6 +49,8 @@ services:
     expose:
       - "5438"
     command: -p 5438
+    ports:
+      - "5438:5438"
 
 volumes:
   ewm_pgdata:

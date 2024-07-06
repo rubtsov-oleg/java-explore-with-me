@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.dto.HitDTO;
 import ru.practicum.explorewithme.dto.StatsDTO;
+import ru.practicum.explorewithme.exception.ValidationException;
 import ru.practicum.explorewithme.hit.mapper.HitMapper;
 import ru.practicum.explorewithme.hit.mapper.StatsMapper;
 import ru.practicum.explorewithme.hit.model.Stats;
@@ -28,6 +29,9 @@ public class HitServiceImpl implements HitService {
 
     @Override
     public List<StatsDTO> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        if (end.isBefore(start)) {
+            throw new ValidationException("Дата окончания не может быть раньше даты начала");
+        }
         List<Stats> statsList;
         if (uris == null || uris.isEmpty()) {
             if (unique) {
