@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.explorewithme.category.CategoryDTO;
+import ru.practicum.explorewithme.comment.dto.CommentShortDTO;
 import ru.practicum.explorewithme.event.model.EventState;
 import ru.practicum.explorewithme.user.UserShortDTO;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -33,6 +35,7 @@ public class EventOutDTO {
     private EventState state;
     private String title;
     private Long views;
+    private List<CommentShortDTO> comments;
 
     @JsonCreator
     public EventOutDTO(
@@ -51,7 +54,8 @@ public class EventOutDTO {
             @JsonProperty("requestModeration") Boolean requestModeration,
             @JsonProperty("state") EventState state,
             @JsonProperty("title") String title,
-            @JsonProperty("views") Long views) {
+            @JsonProperty("views") Long views,
+            @JsonProperty("comments") List<CommentShortDTO> comments) {
         this.id = id;
         this.annotation = annotation;
         this.category = category;
@@ -68,6 +72,7 @@ public class EventOutDTO {
         this.state = state;
         this.title = title;
         this.views = views;
+        this.comments = comments;
     }
 
     @Data

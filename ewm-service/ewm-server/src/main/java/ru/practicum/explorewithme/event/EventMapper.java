@@ -6,6 +6,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import ru.practicum.explorewithme.category.*;
 import ru.practicum.explorewithme.client.StatsClient;
+import ru.practicum.explorewithme.comment.CommentMapper;
+import ru.practicum.explorewithme.comment.CommentRepository;
+import ru.practicum.explorewithme.comment.dto.CommentShortDTO;
 import ru.practicum.explorewithme.dto.StatsDTO;
 import ru.practicum.explorewithme.event.dto.EventDTO;
 import ru.practicum.explorewithme.event.dto.EventOutDTO;
@@ -32,7 +35,11 @@ public interface EventMapper {
     @Mapping(target = "location.lon", source = "location.lon")
     @Mapping(target = "views", source = "id", qualifiedByName = "mapViews")
     @Mapping(target = "confirmedRequests", source = "id", qualifiedByName = "mapCountConfirmedRequests")
-    EventOutDTO toOutDTO(Event event, @Context StatsClient statsClient, @Context RequestRepository requestRepository);
+    @Mapping(target = "comments", source = "id", qualifiedByName = "mapComments")
+    EventOutDTO toOutDTO(Event event, @Context StatsClient statsClient,
+                         @Context RequestRepository requestRepository,
+                         @Context CommentRepository commentRepository,
+                         @Context CommentMapper commentMapper);
 
     @Mapping(target = "views", source = "id", qualifiedByName = "mapViews")
     @Mapping(target = "confirmedRequests", source = "id", qualifiedByName = "mapCountConfirmedRequests")
@@ -45,7 +52,9 @@ public interface EventMapper {
     );
 
     List<EventOutDTO> toOutDTOList(
-            List<Event> events, @Context StatsClient statsClient, @Context RequestRepository requestRepository
+            List<Event> events, @Context StatsClient statsClient, @Context RequestRepository requestRepository,
+            @Context CommentRepository commentRepository,
+            @Context CommentMapper commentMapper
     );
 
     @Named("categoryFromId")
@@ -70,5 +79,11 @@ public interface EventMapper {
     @Named("mapCountConfirmedRequests")
     default Long mapCountConfirmedRequests(Integer eventId, @Context RequestRepository requestRepository) {
         return requestRepository.countByEventIdAndStatusConfirmed(eventId);
+    }
+
+    @Named("mapComments")
+    default List<CommentShortDTO> mapComments(Integer eventId, @Context CommentRepository commentRepository,
+                                              @Context CommentMapper commentMapper) {
+        return commentMapper.toShortDTOList(commentRepository.findAllByEventIdOrderByCreatedDesc(eventId));
     }
 }
